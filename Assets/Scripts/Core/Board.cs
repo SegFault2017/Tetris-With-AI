@@ -53,7 +53,7 @@ public class Board : MonoBehaviour
             {
                 return false;
             }
-            // check whether pos is occupied or not.
+            // check whether pos is occupied or not. 
             if (IsOccupied((int)pos.x, (int)pos.y, shape))
             {
                 return false;
