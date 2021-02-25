@@ -4,15 +4,12 @@ using System.Collections;
 
 public class Board : MonoBehaviour
 {
-
+    // Use this for initialization
     public Transform m_emptySprite;
     public int m_height = 30;
     public int m_width = 10;
-
     public int m_header = 8;
-
-
-    // Use this for initialization
+    public int m_completedRows = 0;
 
     Transform[,] m_grid;
 
@@ -151,11 +148,13 @@ public class Board : MonoBehaviour
 
     public void ClearAllRows()
     {
+        m_completedRows = 0;
         for (int y = 0; y < m_height; ++y)
         {
             if (IsCompleted(y))
             {
                 ClearRow(y);
+                m_completedRows++;
                 ShiftRowsDown(y + 1);
                 y--;
             }

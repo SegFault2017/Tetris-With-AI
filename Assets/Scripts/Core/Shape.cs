@@ -34,7 +34,7 @@ public class Shape : MonoBehaviour
     }
 
     // Rotation
-    public void RotateRight()
+    void RotateRight()
     {
         if (m_canRotate)
         {
@@ -42,12 +42,24 @@ public class Shape : MonoBehaviour
         }
     }
 
-    public void RotateLeft()
+    void RotateLeft()
     {
         if (m_canRotate)
         {
             transform.Rotate(0, 0, 90);
 
+        }
+    }
+
+    public void RotateClockwise(bool clockwise)
+    {
+        if (clockwise)
+        {
+            RotateRight();
+        }
+        else
+        {
+            RotateLeft();
         }
     }
 
