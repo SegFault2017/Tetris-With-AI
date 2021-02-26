@@ -11,11 +11,14 @@ public class GameController : MonoBehaviour
     // keep track of the current falling Shape
     Shape m_activeShape;
 
-
     //Sound manager 
     SoundManager m_soundManager;
 
+    //Score Manager
+    ScoreManager m_scoreManager;
+
     public GameObject m_gameOverPanel;
+
 
 
     bool m_gameOvered = false;
@@ -38,6 +41,10 @@ public class GameController : MonoBehaviour
     public IconToggle m_rotIconToggle;
     bool m_clockwise = true;
 
+    //Pause Menu
+    bool m_isPaused = false;
+    public GameObject m_pausePanel;
+
     public void ToggleRotDirection()
     {
         m_clockwise = !m_clockwise;
@@ -46,6 +53,25 @@ public class GameController : MonoBehaviour
             return;
         }
         m_rotIconToggle.ToggleIcon(m_clockwise);
+    }
+
+    public void TogglePause()
+    {
+        if (!m_pausePanel || m_gameOvered)
+        {
+            return;
+        }
+        m_isPaused = !m_isPaused;
+        m_pausePanel.SetActive(m_isPaused);
+        if (m_soundManager)
+        {
+            m_soundManager.m_musicVolume = (m_isPaused) ?
+            m_soundManager.m_musicVolume * 0.25f : m_soundManager.m_musicVolume / 0.25f;
+        }
+        Time.timeScale = (m_isPaused) ? 0 : 1;
+
+
+
     }
 
     void PlayFXSound(AudioClip clip, float volMultiplier)
@@ -121,6 +147,10 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
 
     }
 
@@ -139,24 +169,34 @@ public class GameController : MonoBehaviour
         m_gameBoard.ClearAllRows();
         if (m_gameBoard.m_completedRows > 0)
         {
-            int n = m_soundManager.m_vocalClips.Length;
-            if (m_gameBoard.m_completedRows > 3)
+            m_scoreManager.ScoreLines(m_gameBoard.m_completedRows);
+            if (m_scoreManager.m_didLvlUp)
             {
-                PlayFXSound(m_soundManager.m_vocalClips[n - 1], 0.5f);
-            }
-            else if (m_gameBoard.m_completedRows > 2)
-            {
-                PlayFXSound(m_soundManager.m_vocalClips[n - 2], 0.5f);
-            }
-            else if (m_gameBoard.m_completedRows > 1)
-            {
-                PlayFXSound(m_soundManager.m_vocalClips[n - 3], 0.5f);
+                PlayFXSound(m_soundManager.m_lvlUpVocalClip, 1f);
             }
             else
             {
-                PlayFXSound(m_soundManager.m_vocalClips[n - 4], 0.5f);
+                int n = m_soundManager.m_vocalClips.Length;
+                if (m_gameBoard.m_completedRows > 3)
+                {
+                    PlayFXSound(m_soundManager.m_vocalClips[n - 1], 0.5f);
+                }
+                else if (m_gameBoard.m_completedRows > 2)
+                {
+                    PlayFXSound(m_soundManager.m_vocalClips[n - 2], 0.5f);
+                }
+                else if (m_gameBoard.m_completedRows > 1)
+                {
+                    PlayFXSound(m_soundManager.m_vocalClips[n - 3], 0.5f);
+                }
+                else
+                {
+                    PlayFXSound(m_soundManager.m_vocalClips[n - 4], 0.5f);
+                }
             }
+
             PlayFXSound(m_soundManager.m_clearRowSound, 0.5f);
+
         }
     }
 
@@ -165,7 +205,7 @@ public class GameController : MonoBehaviour
     void Update()
     {
         // if we don't have a spawner or gameBoard just don't run the gameBoard
-        if (!m_gameBoard || !m_spawner || m_gameOvered || !m_soundManager)
+        if (!m_gameBoard || !m_spawner || m_gameOvered || !m_soundManager || !m_scoreManager)
         {
             return;
         }
@@ -187,6 +227,7 @@ public class GameController : MonoBehaviour
 
     public void Restart()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -203,6 +244,7 @@ public class GameController : MonoBehaviour
         m_gameBoard = GameObject.FindObjectOfType<Board>();
         m_spawner = GameObject.FindObjectOfType<Spawner>();
         m_soundManager = GameObject.FindObjectOfType<SoundManager>();
+        m_scoreManager = GameObject.FindObjectOfType<ScoreManager>();
 
 
         // check existence of game board
@@ -230,9 +272,19 @@ public class GameController : MonoBehaviour
             Debug.LogWarning("WARNING! There is no sound manager defined!");
         }
 
+        if (!m_scoreManager)
+        {
+            Debug.LogWarning("WARNING! There is no score manager defined!");
+        }
+
         if (m_gameOverPanel)
         {
             m_gameOverPanel.SetActive(false);
+        }
+
+        if (m_pausePanel)
+        {
+            m_pausePanel.SetActive(false);
         }
 
     }

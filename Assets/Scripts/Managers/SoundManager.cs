@@ -28,6 +28,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] m_musicClips;
 
     public AudioClip m_gameOverVocalClip;
+    public AudioClip m_lvlUpVocalClip;
+
 
     //Icon
     public IconToggle m_musicIconToggle;
