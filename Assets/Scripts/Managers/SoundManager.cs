@@ -18,6 +18,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip m_gameOverSound;
 
     public AudioClip m_errorSound;
+    public AudioClip m_holdSound;
+
 
     // public AudioClip m_backgroundMusic;
     public AudioSource m_musicSource;
@@ -29,6 +31,7 @@ public class SoundManager : MonoBehaviour
 
     public AudioClip m_gameOverVocalClip;
     public AudioClip m_lvlUpVocalClip;
+
 
 
     //Icon

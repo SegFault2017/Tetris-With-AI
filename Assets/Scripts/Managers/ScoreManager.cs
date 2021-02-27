@@ -8,7 +8,7 @@ public class ScoreManager : MonoBehaviour
 {
     int m_score = 0;
     int m_lines;
-    int m_lvl = 1;
+    public int m_lvl = 1;
     int m_minLines = 1;
     int m_maxLines = 4;
 
@@ -17,6 +17,9 @@ public class ScoreManager : MonoBehaviour
     public Text m_lvlText;
     public bool m_didLvlUp = false;
     public int m_linesPerLvl = 5;
+
+    //Level up FX
+    public ParticlePlayer m_lvlFX;
 
 
     public void ScoreLines(int n)
@@ -79,8 +82,12 @@ public class ScoreManager : MonoBehaviour
     void LevelUp()
     {
         m_lvl++;
-        m_lines = m_linesPerLvl * m_lvl;
+        m_lines += m_linesPerLvl * m_lvl;
         m_didLvlUp = true;
+        if (m_lvlFX)
+        {
+            m_lvlFX.Play();
+        }
     }
 
 
