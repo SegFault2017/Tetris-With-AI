@@ -1,37 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 [RequireComponent(typeof(Image))]
-public class IconToggle : MonoBehaviour
-{
-    public Sprite m_iconTrue;
-    public Sprite m_iconFalse;
-    public bool m_defaultIconState = true;
-    Image m_image;
+public class IconToggle : MonoBehaviour {
+	// the sprite that we use if we are set to true
+	public Sprite m_iconTrue;
+
+	// the sprite that we use if we are set to false
+	public Sprite m_iconFalse;
+
+	// default state of the icon toggle
+	public bool m_defaultIconState = true;
+
+	// the UI.Image component
+	Image m_image;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        m_image = GetComponent<Image>();
-        m_image.sprite = (m_defaultIconState) ? m_iconTrue : m_iconFalse;
-    }
+	// Use this for initialization
+	void Start () {
+		m_image = GetComponent<Image>();
+		m_image.sprite = (m_defaultIconState) ? m_iconTrue : m_iconFalse;
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
+	public void ToggleIcon(bool state)
+	{
+		if (!m_image || !m_iconTrue || !m_iconFalse)
+		{
+			Debug.LogWarning("ICONTOGGLE Undefined iconTrue and/or iconFalse!"); 
+			return;
+		}
 
-    }
-
-    public void ToggleIcon(bool state)
-    {
-        if (!m_image || !m_iconFalse || !m_iconTrue)
-        {
-            return;
-        }
-        m_image.sprite = (state) ? m_iconTrue : m_iconFalse;
-    }
-
+		m_image.sprite = (state) ? m_iconTrue : m_iconFalse;
+	}
+		
 }

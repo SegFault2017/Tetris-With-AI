@@ -1,106 +1,137 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+
+public class ScoreManager : MonoBehaviour {
+	//our score
+	int m_score = 0;
+
+	// the number of lines we need to get to the next level
+	int m_lines;
+
+	// our current level
+	public int m_level = 1;
+
+	// base number of lines needed to clear a level
+	public int m_linesPerLevel = 5;
+
+	// text component for our Lines UI
+	public Text m_linesText;
+
+	// text component for our Level UI
+	public Text m_levelText;
+
+	// text component for our Score UI
+	public Text m_scoreText;
+
+	// minimum number of lines we can clear if we do indeed clear any lines
+	const int m_minLines = 1;
+
+	// maximum number of lines we can clear if we do indeed clear any lines
+	const int m_maxLines = 4;
+
+	//
+	public bool didLevelUp = false;
+
+    public ParticlePlayer m_levelUpFx;
 
 
-public class ScoreManager : MonoBehaviour
-{
-    int m_score = 0;
-    int m_lines;
-    public int m_lvl = 1;
-    int m_minLines = 1;
-    int m_maxLines = 4;
+	// update the user interface
+	void UpdateUIText()
+	{
+		if (m_linesText)
+		{
+			m_linesText.text = m_lines.ToString();
+		}
 
-    public Text m_lineText;
-    public Text m_scoreText;
-    public Text m_lvlText;
-    public bool m_didLvlUp = false;
-    public int m_linesPerLvl = 5;
+		if (m_levelText)
+		{
+			m_levelText.text = m_level.ToString();
+		}
 
-    //Level up FX
-    public ParticlePlayer m_lvlFX;
+		if (m_scoreText)
+		{
+			m_scoreText.text = PadZero(m_score,5);
+		}
+	}
 
+	// handle scoring
+	public void ScoreLines(int n)
+	{
+		// flag to GameController that we leveled up
+		didLevelUp = false;
 
-    public void ScoreLines(int n)
-    {
-        m_didLvlUp = false;
-        n = Mathf.Clamp(n, m_minLines, m_maxLines);
-        switch (n)
+		// clamp this between 1 and 4 lines
+		n = Mathf.Clamp(n,m_minLines,m_maxLines);
+
+		// adds to our score depending on how many lines we clear
+		switch (n)
+		{
+			case 1:
+				m_score += 40 * m_level;
+				break;
+			case 2:
+				m_score += 100 * m_level;
+				break;
+			case 3:
+				m_score += 300 * m_level;
+				break;
+			case 4:
+				m_score += 1200 * m_level;
+				break;
+		}
+
+		// reduce our current number of lines needed for the next level
+		m_lines -= n;
+
+		// if we finished our lines, then level up
+		if (m_lines <= 0)
+		{
+			LevelUp();
+		}
+
+		// update the user interface
+		UpdateUIText();
+	}
+
+	// start our level and lines -- in the future we might start at a different level than 1 for increased difficulty
+	public void Reset()
+	{
+		m_level = 1;
+		m_lines = m_linesPerLevel * m_level;
+		UpdateUIText();
+	}
+
+	// increments our level
+	public void LevelUp()
+	{
+		m_level++;
+		m_lines = m_linesPerLevel* m_level;
+		didLevelUp = true;
+
+        if (m_levelUpFx)
         {
-            case 1:
-                m_score += 40 * n;
-                break;
-            case 2:
-                m_score += 100 * n;
-                break;
-            case 3:
-                m_score += 300 * n;
-                break;
-            case 4:
-                m_score += 1200 * n;
-                break;
+            m_levelUpFx.Play();
         }
-        m_lines -= n;
-        if (m_lines <= 0)
-        {
-            LevelUp();
-        }
-        UpdateUIText();
-    }
+	}
 
-    public void Reset()
-    {
-        m_lvl = 1;
-        m_lines = m_linesPerLvl * m_lvl;
-    }
-    string PadZeros(int n, int padDigits)
-    {
-        string nString = n.ToString();
-        while (nString.Length < padDigits)
-        {
-            nString = "0" + nString;
-        }
-        return nString;
-    }
-    void UpdateUIText()
-    {
-        if (m_lineText)
-        {
-            m_lineText.text = m_lines.ToString();
-        }
-        if (m_scoreText)
-        {
-            m_scoreText.text = PadZeros(m_score, 5);
-        }
-        if (m_lvlText)
-        {
-            m_lvlText.text = m_lvl.ToString();
-        }
-    }
+	void Start () 
+	{
+		Reset();
+	}
 
-    void LevelUp()
-    {
-        m_lvl++;
-        m_lines += m_linesPerLvl * m_lvl;
-        m_didLvlUp = true;
-        if (m_lvlFX)
-        {
-            m_lvlFX.Play();
-        }
-    }
+	// returns a string padded to a certain number of places
+	string PadZero(int n,int padDigits)
+	{
+		string nStr = n.ToString();
+
+		while (nStr.Length < padDigits)
+		{
+			nStr = "0" + nStr;
+		}
+		return nStr;
+	}
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Reset();
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

@@ -1,20 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
 public class Shape : MonoBehaviour
 {
 
+    // turn this property off if you don't want the shape to rotate (Shape O)
     public bool m_canRotate = true;
 
+    // small offset to shift position while in queue
     public Vector3 m_queueOffset;
 
-    //Glow Effects
     GameObject[] m_glowSquareFx;
-    public string glowSquareTag = "LandShapeFX";
+    public string glowSquareTag = "LandShapeFx";
 
+    void Start()
+    {
+        if (glowSquareTag != "")
+        {
+            m_glowSquareFx = GameObject.FindGameObjectsWithTag(glowSquareTag);
+        }
+    }
 
-    //Land Shape Fx
     public void LandShapeFX()
     {
         int i = 0;
@@ -23,24 +29,27 @@ public class Shape : MonoBehaviour
         {
             if (m_glowSquareFx[i])
             {
-                m_glowSquareFx[i].transform.position = new Vector3(child.position.x, child.position.y, -2f);
+                m_glowSquareFx[i].transform.position = new Vector3(child.position.x, child.position.y,-2f);
                 ParticlePlayer particlePlayer = m_glowSquareFx[i].GetComponent<ParticlePlayer>();
+
                 if (particlePlayer)
                 {
                     particlePlayer.Play();
                 }
             }
+
             i++;
         }
+
     }
 
-    // Move shapes in direction
-    void Move(Vector3 direction)
+    // general move method
+    void Move(Vector3 moveDirection)
     {
-        transform.position += direction;
+        transform.position += moveDirection;
     }
 
-    // Translations
+    //public methods for moving left, right, up and down, respectively
     public void MoveLeft()
     {
         Move(new Vector3(-1, 0, 0));
@@ -61,22 +70,17 @@ public class Shape : MonoBehaviour
         Move(new Vector3(0, -1, 0));
     }
 
-    // Rotation
-    void RotateRight()
+
+    //public methods for rotating right and left
+    public void RotateRight()
     {
         if (m_canRotate)
-        {
             transform.Rotate(0, 0, -90);
-        }
     }
-
-    void RotateLeft()
+    public void RotateLeft()
     {
         if (m_canRotate)
-        {
             transform.Rotate(0, 0, 90);
-
-        }
     }
 
     public void RotateClockwise(bool clockwise)
@@ -91,20 +95,4 @@ public class Shape : MonoBehaviour
         }
     }
 
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (glowSquareTag != "")
-        {
-            m_glowSquareFx = GameObject.FindGameObjectsWithTag(glowSquareTag);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
