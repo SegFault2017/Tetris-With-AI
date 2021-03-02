@@ -174,7 +174,6 @@ public class GameController : MonoBehaviour
         if (m_humanMode)
         {
             PlayerInput();
-
         }
         else
         {
@@ -294,8 +293,7 @@ public class GameController : MonoBehaviour
 
     void AIInput()
     {
-        Dictionary<string, int> bestMoves = m_AIShape.BestMoves(m_gameBoard, m_activeShape);
-        Debug.Log("rotations: " + bestMoves["rotations"].ToString() + " , translation" + bestMoves["translations"]);
+
 
         if (Time.time > m_timeToDrop)
         {
@@ -346,6 +344,9 @@ public class GameController : MonoBehaviour
             }
             // spawn a new shape
             m_activeShape = m_spawner.SpawnShape();
+
+            // Elite elite = m_AIShape.BestMoves(m_gameBoard, m_activeShape);
+            // m_activeShape.ClonedPos(elite.m_tranlations);
 
             // set all of the timeToNextKey variables to current time, so no input delay for the next spawned shape
             m_timeToNextKeyLeftRight = Time.time;
@@ -464,6 +465,16 @@ public class GameController : MonoBehaviour
         {
             m_modeIconToggle.ToggleIcon(m_humanMode);
         }
+        // if (!m_humanMode)
+        // {
+        // Elite elite = m_AIShape.BestMoves(m_gameBoard, m_activeShape);
+        // m_activeShape.ClonedPos(elite.m_tranlations);
+        // Debug.Log("rotation: " + elite.m_rotations);
+        // foreach (Vector2 pos in elite.m_tranlations)
+        // {
+        //     Debug.Log("y:" + pos.y + " x:" + pos.x)
+        // }
+        // }
     }
 
     public void Hold()

@@ -4,7 +4,6 @@ using System.Collections;
 
 public class Board : MonoBehaviour
 {
-
     // a SpriteRenderer that will be instantiated in a grid to create our board
     public Transform m_emptySprite;
 
@@ -221,13 +220,14 @@ public class Board : MonoBehaviour
 
     float ColumnHeight(int x)
     {
-        int y = 0;
-
-        while (y < m_height && !m_grid[x, y])
+        int y = m_height - m_header;
+        int blank = 0;
+        while (y > 0 && m_grid[x, y] == null)
         {
-            y++;
+            y--;
+            blank++;
         }
-        return (float)y;
+        return (float)(m_height - m_header - blank);
     }
 
 
@@ -259,8 +259,8 @@ public class Board : MonoBehaviour
         float holes = 0f;
         for (int x = 0; x < m_width; ++x)
         {
-            bool block = true;
-            for (int y = 0; y < m_height; y++)
+            bool block = false;
+            for (int y = m_height - m_header - 1; y >= 0; y--)
             {
                 if (m_grid[x, y])
                 {

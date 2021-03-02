@@ -148,5 +148,12 @@ public class Shape : MonoBehaviour
     }
 
 
-
+    public void ClonedPos(Vector2[] pos)
+    {
+        int i = 0;
+        foreach (Transform child in transform)
+        {
+            child.position = pos[i];
+        }
+    }
 }
