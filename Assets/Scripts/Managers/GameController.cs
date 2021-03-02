@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
-
+    // --------------------------------- Managers
     // reference to our board
     Board m_gameBoard;
 
@@ -16,6 +18,8 @@ public class GameController : MonoBehaviour
     // reference to our scoreManager
     ScoreManager m_scoreManager;
 
+
+    // ------------------------------- Properties
     // currently active shape
     Shape m_activeShape;
 
@@ -24,11 +28,16 @@ public class GameController : MonoBehaviour
 
     Holder m_holder;
 
+    AIShape m_AIShape;
+
+
+    //-------------------------------- Drop Time Control
     // starting drop interval value
-    public float m_dropInterval = 0.1f;
+    public float m_dropInterval = 0.05f;
 
     // drop interval modified by level
     float m_dropIntervalModded;
+
 
     // the next time that the active shape can drop
     float m_timeToDrop;
@@ -54,6 +63,7 @@ public class GameController : MonoBehaviour
     [Range(0.02f, 1f)]
     public float m_keyRepeatRateRotate = 0.25f;
 
+
     // the panel that displays when our game is over
     public GameObject m_gameOverPanel;
 
@@ -62,6 +72,9 @@ public class GameController : MonoBehaviour
 
     // toggles the rotation direction icon
     public IconToggle m_rotIconToggle;
+
+    public IconToggle m_modeIconToggle;
+
 
     // whether we are rotating clockwise or not when we click the up arrow
     bool m_clockwise = true;
@@ -73,6 +86,14 @@ public class GameController : MonoBehaviour
     public GameObject m_pausePanel;
 
     public ParticlePlayer m_gameOverFx;
+
+    //! -------------------------------------------------- AI Part 
+
+    bool m_humanMode = true;
+    float m_AIDropInterval = 0.1f;
+
+
+
 
     // Use this for initialization
     void Start()
@@ -89,6 +110,8 @@ public class GameController : MonoBehaviour
         m_scoreManager = GameObject.FindObjectOfType<ScoreManager>();
         m_ghost = GameObject.FindObjectOfType<Ghost>();
         m_holder = GameObject.FindObjectOfType<Holder>();
+        m_AIShape = GameObject.FindObjectOfType<AIShape>();
+
 
 
         m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
@@ -122,6 +145,8 @@ public class GameController : MonoBehaviour
             {
                 m_activeShape = m_spawner.SpawnShape();
             }
+
+
         }
 
         if (m_gameOverPanel)
@@ -146,14 +171,27 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        PlayerInput();
+        if (m_humanMode)
+        {
+            PlayerInput();
+
+        }
+        else
+        {
+            AIInput();
+        }
     }
 
     void LateUpdate()
     {
-        if (m_ghost)
+        if (m_ghost && m_humanMode & m_AIShape)
         {
             m_ghost.DrawGhost(m_activeShape, m_gameBoard);
+        }
+
+        if (m_AIShape && !m_humanMode)
+        {
+            // m_AIShape.DrawAI(m_activeShape, m_gameBoard);
         }
     }
 
@@ -162,7 +200,7 @@ public class GameController : MonoBehaviour
         // example of NOT using the Input Manager
         //if (Input.GetKey ("right") && (Time.time > m_timeToNextKey) || Input.GetKeyDown (KeyCode.RightArrow)) 
 
-        if ((Input.GetButton("MoveRight") && (Time.time > m_timeToNextKeyLeftRight)) || Input.GetButtonDown("MoveRight"))
+        if ((Input.GetKey(KeyCode.RightArrow) && (Time.time > m_timeToNextKeyLeftRight)) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             m_activeShape.MoveRight();
             m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
@@ -175,11 +213,10 @@ public class GameController : MonoBehaviour
             else
             {
                 PlaySound(m_soundManager.m_moveSound, 0.5f);
-
             }
 
         }
-        else if ((Input.GetButton("MoveLeft") && (Time.time > m_timeToNextKeyLeftRight)) || Input.GetButtonDown("MoveLeft"))
+        else if ((Input.GetKey(KeyCode.LeftArrow) && (Time.time > m_timeToNextKeyLeftRight)) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             m_activeShape.MoveLeft();
             m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
@@ -196,7 +233,7 @@ public class GameController : MonoBehaviour
             }
 
         }
-        else if (Input.GetButtonDown("Rotate") && (Time.time > m_timeToNextKeyRotate))
+        else if ((Input.GetKey(KeyCode.UpArrow) && (Time.time > m_timeToNextKeyRotate)))
         {
             //m_activeShape.RotateRight();
             m_activeShape.RotateClockwise(m_clockwise);
@@ -218,7 +255,7 @@ public class GameController : MonoBehaviour
 
         }
 
-        else if ((Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop))
+        else if ((Input.GetKey(KeyCode.DownArrow) && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop))
         {
             m_timeToDrop = Time.time + m_dropIntervalModded;
 
@@ -239,19 +276,48 @@ public class GameController : MonoBehaviour
             }
 
         }
-        else if (Input.GetButtonDown("ToggleRot"))
+        else if (Input.GetKeyDown(KeyCode.R))
         {
             ToggleRotDirection();
         }
-        else if (Input.GetButtonDown("Pause"))
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePause();
         }
-        else if (Input.GetButtonDown("Hold"))
+        else if (Input.GetKeyDown(KeyCode.H))
         {
             Hold();
         }
+
     }
+
+
+    void AIInput()
+    {
+        Dictionary<string, int> bestMoves = m_AIShape.BestMoves(m_gameBoard, m_activeShape);
+        Debug.Log("rotations: " + bestMoves["rotations"].ToString() + " , translation" + bestMoves["translations"]);
+
+        if (Time.time > m_timeToDrop)
+        {
+            m_timeToDrop = Time.time + m_AIDropInterval;
+
+            m_activeShape.MoveDown();
+
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                if (m_gameBoard.IsOverLimit(m_activeShape))
+                {
+                    GameOver();
+                }
+                else
+                {
+                    LandShape();
+                }
+            }
+
+        }
+    }
+
 
     // shape lands
     void LandShape()
@@ -267,6 +333,11 @@ public class GameController : MonoBehaviour
             if (m_ghost)
             {
                 m_ghost.Reset();
+            }
+
+            if (m_AIShape)
+            {
+                m_AIShape.Reset();
             }
 
             if (m_holder)
@@ -348,7 +419,7 @@ public class GameController : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1f;
-        Application.LoadLevel(Application.loadedLevel);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // plays a sound with an option volume multiplier
@@ -383,6 +454,15 @@ public class GameController : MonoBehaviour
             }
 
             Time.timeScale = (m_isPaused) ? 0 : 1;
+        }
+    }
+
+    public void ToggleMode()
+    {
+        m_humanMode = !m_humanMode;
+        if (m_modeIconToggle)
+        {
+            m_modeIconToggle.ToggleIcon(m_humanMode);
         }
     }
 
@@ -438,7 +518,6 @@ public class GameController : MonoBehaviour
         }
 
     }
-
 
 
 }

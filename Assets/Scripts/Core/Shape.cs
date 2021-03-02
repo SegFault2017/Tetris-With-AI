@@ -13,12 +13,23 @@ public class Shape : MonoBehaviour
     GameObject[] m_glowSquareFx;
     public string glowSquareTag = "LandShapeFx";
 
+    Renderer[] m_shapeRenderers;
+    public bool m_IsVisible = true;
+
+
     void Start()
     {
+        m_shapeRenderers = this.GetComponentsInChildren<Renderer>();
+
         if (glowSquareTag != "")
         {
             m_glowSquareFx = GameObject.FindGameObjectsWithTag(glowSquareTag);
         }
+    }
+
+    void Update()
+    {
+
     }
 
     public void LandShapeFX()
@@ -29,7 +40,7 @@ public class Shape : MonoBehaviour
         {
             if (m_glowSquareFx[i])
             {
-                m_glowSquareFx[i].transform.position = new Vector3(child.position.x, child.position.y,-2f);
+                m_glowSquareFx[i].transform.position = new Vector3(child.position.x, child.position.y, -2f);
                 ParticlePlayer particlePlayer = m_glowSquareFx[i].GetComponent<ParticlePlayer>();
 
                 if (particlePlayer)
@@ -94,5 +105,48 @@ public class Shape : MonoBehaviour
             RotateLeft();
         }
     }
+
+    public void ToggleVisibility()
+    {
+        m_IsVisible = !m_IsVisible;
+        if (!m_IsVisible)
+        {
+            foreach (Renderer rend in m_shapeRenderers)
+            {
+                rend.enabled = false;
+            }
+        }
+        else
+        {
+            foreach (Renderer rend in m_shapeRenderers)
+            {
+                rend.enabled = true;
+            }
+        }
+    }
+
+    public Vector2[] GetPos()
+    {
+        Vector2[] shapePos = new Vector2[4];
+        int i = 0;
+        foreach (Transform child in transform)
+        {
+            Vector2 pos = Vectorf.Round(child.position);
+            shapePos[i] = pos;
+            i++;
+        }
+
+        return shapePos;
+    }
+
+    public void Hide()
+    {
+        foreach (Renderer rend in m_shapeRenderers)
+        {
+            rend.enabled = false;
+        }
+    }
+
+
 
 }

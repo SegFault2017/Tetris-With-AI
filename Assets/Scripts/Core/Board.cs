@@ -52,6 +52,7 @@ public class Board : MonoBehaviour
         return (m_grid[x, y] != null && m_grid[x, y].parent != shape.transform);
     }
 
+
     public bool IsValidPosition(Shape shape)
     {
         foreach (Transform child in shape.transform)
@@ -130,9 +131,17 @@ public class Board : MonoBehaviour
 
             }
             m_grid[x, y] = null;
-
         }
 
+    }
+
+    public void DestroyCell(int x, int y)
+    {
+        if (m_grid[x, y])
+        {
+            Destroy(m_grid[x, y].gameObject);
+        }
+        m_grid[x, y] = null;
     }
 
     void ShiftOneRowDown(int y)
@@ -205,5 +214,77 @@ public class Board : MonoBehaviour
         }
     }
 
+
+
+
+    // --------------- Calculate attributes 4 AI
+
+    float ColumnHeight(int x)
+    {
+        int y = 0;
+
+        while (y < m_height && !m_grid[x, y])
+        {
+            y++;
+        }
+        return (float)y;
+    }
+
+
+    public float AggreateHeight()
+    {
+        float total = 0f;
+        for (int x = 0; x < m_width; x++)
+        {
+            total += ColumnHeight(x);
+        }
+        return total;
+    }
+
+    public float GetLines()
+    {
+        float lines = 0f;
+        for (int y = 0; y < m_height; y++)
+        {
+            if (IsComplete(y))
+            {
+                lines++;
+            }
+        }
+        return lines;
+    }
+
+    public float GetHoles()
+    {
+        float holes = 0f;
+        for (int x = 0; x < m_width; ++x)
+        {
+            bool block = true;
+            for (int y = 0; y < m_height; y++)
+            {
+                if (m_grid[x, y])
+                {
+                    block = true;
+                }
+                else if (!m_grid[x, y] && block)
+                {
+                    holes++;
+                }
+
+            }
+        }
+
+        return holes;
+    }
+
+    public float GetBumpiness()
+    {
+        float bumpiness = 0f;
+        for (int x = 0; x < m_width - 1; x++)
+        {
+            bumpiness += Mathf.Abs(ColumnHeight(x) - ColumnHeight(x + 1));
+        }
+        return bumpiness;
+    }
 
 }
