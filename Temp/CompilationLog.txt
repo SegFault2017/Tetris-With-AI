@@ -1,2 +1,22 @@
+# Starting compiling UnityEngine.TestRunner.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-dc0c2b6dc88d2415a981b43f1d1d251d
+# Starting compiling UnityEngine.UI.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-1dce0efccb1fd4f438a67aae360a141b
+# Starting compiling UnityEngine.Purchasing.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-bf3c36becda8945d1ae8bcd9e3d726c2
+# Starting compiling Unity.Timeline.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-6064a0ec85cb945abb486edd88d47743
+# Starting compiling Unity.TextMeshPro.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-aebd3fc6668314c38869b88e21fc1e2c
+# Starting compiling UnityEngine.SpatialTracking.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-978316854528849479ecd0a161741d24
+# Starting compiling Unity.Analytics.DataPrivacy.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-7383488a348bb4e4fbffc7e71a5003c6
+# Starting compiling UnityEngine.Advertisements.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-acac2dffc374a480f9664630d9e72dc0
+# Starting compiling UnityEngine.XR.LegacyInputHelpers.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-21bda9b05957f498693404d9fb90e8ff
+# Starting compiling UnityEngine.Monetization.dll
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-ac4783ac49a8c4330923e16cb619d1df
 # Starting compiling Assembly-CSharp.dll
-/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-b3002e39fa76341fbbefd0a763e7d60b
+/Applications/Unity/Unity.app/Contents/Tools/RoslynScripts/unity_csc.sh /noconfig @Temp/UnityTempFile-c9e77280272e940a5a81236ffedd06de
