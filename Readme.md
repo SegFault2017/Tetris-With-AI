@@ -2,7 +2,7 @@
 
 - [Tetris-With-Ai](#evolutionary-tetris)
 - [Demo](#demo)
-- [Architechture](#architeture)
+- [Architechture](#architecture)
 - [Support](#support)
 - [Used Tech](#used-tech)
 - [Acknowledgement](#acknowledgement)
@@ -12,6 +12,8 @@
 
 ## Tetri with AI
 This AI uses evolutionary technique to improve over time. Through selection, crossover, and mutation, the AI will learn to paly [Tetris](https://en.wikipedia.org/wiki/Tetris) in as few moves as possible.
+
+The brain icon located at middle right will becom a robot icon, AI mode, when a player press it.
 
 
 ## Demo
@@ -38,10 +40,12 @@ Problems that may be caused by MVC or similar frameworks in actual development:
 ## More
 Many design patterns are to learn their ideas and solutions.
 We should think and ask questions about design patterns and frameworks:
-What needs does this framework apply to? What problem was solved?
-Under what circumstances should I use it, and when should I not use it? What problem does he bring?
-Is it suitable for my project, my team?
-Should I use the project as a whole, or should I use it for some partial requirements?
+- What needs does this framework apply to? What problem was solved?
+
+- Under what circumstances should I use it, and when should I not use it? What problem does he bring?
+
+- Is it suitable for my project, my team?
+- Should I use the project as a whole, or should I use it for some partial requirements?
 
 
 
