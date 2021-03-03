@@ -1,60 +1,69 @@
 ## Table of contents
 
-- [Evlolutionary Tetris](#evolutionary-tetris)
+- [Tetris-With-Ai](#evolutionary-tetris)
 - [Demo](#demo)
+- [Architechture](#architeture)
+- [Support](#support)
 - [Used Tech](#used-tech)
 - [Acknowledgement](#acknowledgement)
 - [AI](#ai)
+- [More](#more)
 
-## Implemented
+
+## Tetri with AI
 This AI uses evolutionary technique to improve over time. Through selection, crossover, and mutation, the AI will learn to paly [Tetris](https://en.wikipedia.org/wiki/Tetris) in as few moves as possible.
 
-## Acknowledgement
-
-- [CS486: Intro to AI](https://cs.uwaterloo.ca/~a23gao/cs486_f18/slides/lec08_csp_local_search_nosol.pdf)
-- [Building A Tetris Bot Part 2: Genetic Algorithms](https://medium.com/@omgimanerd/building-a-tetris-bot-part-2-genetic-algorithms-889fc66006b1)
 
 ## Demo
-[Live Demo](https://segfault2017.github.io/EvoluationaryTetris/)
-
-
 ![Part 1](demo/demo.gif)
 
-## Genetic Algo
-![Genetic](geneticAlgo.png)
 
-Genetic algorithms work by creating a population of "genomes" that have multiple "genes", representing parameters for the algorithm. Each of these individuals in the population is evaluated and a "fitness" score for each genome is produced. The fittest individuals would reproduce and pass favourable genes down to the next generation. Mutation also occurs where genes are randomly modified in hopes of creating more beneficial features.
+## Architecture
+About the MVC architecture pattern
+Advantages and disadvantages of MVC
+advantage:
 
-The goal of this genetric algo is to clear as many lines as possible, and hence, to make as many moves as possible and select the bes move with the hights score.
+- Low coupling, high cohesion: A system is divided into a presentation layer, a business logic layer, and a data access layer through the MVC framework. For example, only the view layer needs to be changed without recompiling the model and controller code, and the business of an application The change of process or business rules only needs to change the model layer without modifying the code of the view layer and the controller layer.
 
-To achieve this, the AI will select the best move for a given piece by trying out all the possible rotations and translations. It computes a score for each possible move , and selects the one with the best score as its next move. The score for each move is computed by assessing the grid the move would result in. This assessment is based on 4 heuristics: aggregate height, complete lines, holes, and bumpiness, each of which the AI will try to either minimize or maximize.
+- High reusability: The data of the model can be accessed through different view layers, only the data format needs to be processed in the controller layer, without the need to modify the code of the model layer.
 
+- Maintainability: Separate the business layer, view layer, and data layer to make the code easier to maintain
 
-![ScoreFunc](equation.png)
+Problems that may be caused by MVC or similar frameworks in actual development:
 
-where P is the score function of the current piece and 
+- The code is cumbersome: a very simple logic, which has been encapsulated many times, needs to be indexed in multiple code files, and the reading efficiency is extremely low.
 
-- H: is the number of holes after the piece has landed
-- L: is the number of completed lines after the piece has landed
-- AH: is the aggregate height, the sum of all column's height after the piece has landed
-- B: the bumpiness/roughess, the sum of difference of every 2 adjacent colum's height after the piece has landed.
-
-
-
-
-
-## Results
-By using the tuned parameters, aggregated heights, # of completed lines, # of holes, bumpiness of the current state, from the Genetic algorithm after 50 generations, the AI can clear up to 14000 lines. 
-
-## Used Tech
-
-Project used:
-- Javascript
-- HTML, CSS
-- Architecture: Basic MVC
-
+- Project confusion: The inertia of some less professional programs makes them not really understand the principles of MVC or these frameworks. Their goal is to get the functions out. They either bypass the framework and intersperse a lot of calls, or Copy a function of others as a whole, remove the logic, leave the skeleton, and then fill in your own logic, regardless of whether the skeleton is applicable. This greatly increases the confusion of the project
 
 ## More
-- A Unity version is avalible here.
+Many design patterns are to learn their ideas and solutions.
+We should think and ask questions about design patterns and frameworks:
+What needs does this framework apply to? What problem was solved?
+Under what circumstances should I use it, and when should I not use it? What problem does he bring?
+Is it suitable for my project, my team?
+Should I use the project as a whole, or should I use it for some partial requirements?
+
+
+
+
+
+## Support 
+This build supports IOS/Android touch gesture and also joystick. 
+
+
+## Used Tech
+Project used:
+- Unity: 2020.2.6
+- C#
+
+
+# AI
+If you are interested in the AI part. You can checkout [this](https://github.com/SegFault2017/EvoluationaryTetris) out.
+
+## Acknowledgement
+Cerfiticate of course completetion from Udemy.
+
+## More
+- A [web app]() version is avalible here.
 - [Is it possible to Play Tetris forever](https://tetris.fandom.com/wiki/Playing_forever)
 
